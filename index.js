@@ -1,35 +1,39 @@
 const express = require("express");
-const env = process.env.NODE_ENV || 'development';
-const path = require('path');
-require('dotenv').config({
-  path: path.resolve(__dirname, '.environments', `${env}.env`),
-});
 const bodyParser = require('body-parser');
-const mongo = require('./services/mongo');
-const pokemonModel = require('./models/pokemons').Model;
-const fetch = require('node-fetch');
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json())
+
+// Load Environment Variables
+require('dotenv').config();
 const port = process.env.PORT;
+if (!port) {
+  console.error(`Invalid port for server: ${port}`)
+  process.exit(1);
+}
 
-app.get('/pokemons', async (req, res) => {
-  try {
-    const pokemons = await fetch('httxps://pokeapi.co/api/v2/pokemon/?limit=20&offset=20');
-    const json = await pokemons.json();
-    res.json(json);
-  } catch (error) {
-    console.log(error.response.body);
-  }
+// Middlewares
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Health Check Endpoint
+app.get('/health', (req, res) => {
+  const data = {
+    uptime: process.uptime(),
+    message: 'Ok',
+    date: new Date()
+  };
+  res.status(200).send(data);
 });
 
-app.put('/pokemons', async(req, res) => {
-  console.log('body is ',req.body);
-  const pokemon = pokemonModel.CreatePokemon(req.body);
-  res.json(pokemon);
-});
+// Challenge #1: Add GET Pokemons Endpoint
+require('./challenges/01_addGetPokemons')(app);
 
-app.listen(port, async() => {
-  await mongo.connect();
+// Challenge #2: Add GET Pokemon Details Endpoint
+require('./challenges/02_addGetPokemonDetail')(app);
+
+// Challenge #3: Refactor with router
+const router = require('./challenges/03_routingExample');
+app.use('/basePath', router);
+
+app.listen(port, async () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
