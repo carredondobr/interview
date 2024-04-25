@@ -1,0 +1,34 @@
+{
+  "name": "interview",
+  "version": "1.0.0",
+  "description": "interteview 2024",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "nodemon index.js",
+    "docker-compose:up": "COMPOSE_PROJECT_NAME=pokemon_api docker-compose up -d",
+    "docker-compose:down": "COMPOSE_PROJECT_NAME=pokemon_api docker-compose down",
+    "test": "NODE_ENV=test mocha --exit --recursive  --retries 3 test/pokemon.spec.js"
+  },
+  "keywords": [
+    "node",
+    "interview",
+    "api"
+  ],
+  "author": "Brightcove",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^7.6.3",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "chai-almost": "^1.0.1",
+    "chai-arrays": "^2.2.0",
+    "chai-as-promised": "^7.1.1",
+    "lodash": "~4.17.21",
+    "mocha": "~9.2.2",
+    "nodemon": "^3.1.0"
+  }
+}
